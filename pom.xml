@@ -21,10 +21,10 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
-        <!-- LibsDisguises -->
+        <!-- LibsDisguises via JitPack -->
         <repository>
-            <id>md_5-repo</id>
-            <url>https://repo.md-5.net/content/groups/public/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -39,7 +39,7 @@
 
         <!-- LibsDisguises -->
         <dependency>
-            <groupId>me.libraryaddict.disguise</groupId>
+            <groupId>com.github.libraryaddict</groupId>
             <artifactId>LibsDisguises</artifactId>
             <version>10.0.44</version>
             <scope>provided</scope>
