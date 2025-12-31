@@ -1,8 +1,5 @@
 package me.simpleforms;
 
-import me.libraryaddict.disguise.DisguiseAPI;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,63 +52,51 @@ public class SimpleForms extends JavaPlugin {
                 return true;
             }
 
-            // Remove any previous disguise
-            DisguiseAPI.undisguiseToAll(player);
-
-            // Clear potion effects
+            // Remove previous effects
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
 
+            // Execute LibsDisguises command
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                    "disguise " + player.getName() + " " + form);
+
             switch (form) {
                 case "bat" -> {
-                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.BAT));
                     player.setAllowFlight(true);
                     player.setFlying(true);
-
-                    Bukkit.getScheduler().runTaskTimer(this, task -> {
-                        if (!player.isOnline() || !player.isFlying()) {
-                            task.cancel();
-                            return;
-                        }
-                        if (player.getHealth() > 1.0) {
-                            player.damage(1.0);
-                        }
-                    }, 40L, 40L);
-
-                    player.sendMessage("§dYou transformed into a Bat!");
                 }
-
                 case "frog" -> {
-                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.FROG));
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.JUMP_BOOST,
                             Integer.MAX_VALUE,
                             2
                     ));
-                    player.sendMessage("§aYou transformed into a Frog!");
                 }
-
                 case "cat" -> {
-                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.CAT));
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.SPEED,
                             Integer.MAX_VALUE,
                             1
                     ));
-                    player.sendMessage("§6You transformed into a Cat!");
                 }
             }
+
+            player.sendMessage("§aYou transformed into a " + form + "!");
             return true;
         }
 
         if (command.getName().equalsIgnoreCase("untransform")) {
-            DisguiseAPI.undisguiseToAll(player);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                    "undisguise " + player.getName());
+
             player.setAllowFlight(false);
             player.setFlying(false);
+
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
+
             player.sendMessage("§7You returned to human form.");
             return true;
         }
