@@ -47,33 +47,35 @@ public class SimpleForms extends JavaPlugin {
 
         if (command.getName().equalsIgnoreCase("transform")) {
             String form = forms.get(player.getUniqueId());
+
             if (form == null) {
                 player.sendMessage("§cYou haven't selected a form.");
                 return true;
             }
 
-            // Remove previous effects
+            // Remove old effects
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
 
-            // Execute LibsDisguises command
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                    "disguise " + player.getName() + " " + form);
-
             switch (form) {
                 case "bat" -> {
+                    player.performCommand("disguise " + player.getName() + " bat");
                     player.setAllowFlight(true);
                     player.setFlying(true);
                 }
+
                 case "frog" -> {
+                    player.performCommand("disguise " + player.getName() + " frog");
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.JUMP_BOOST,
                             Integer.MAX_VALUE,
                             2
                     ));
                 }
+
                 case "cat" -> {
+                    player.performCommand("disguise " + player.getName() + " cat");
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.SPEED,
                             Integer.MAX_VALUE,
@@ -82,21 +84,17 @@ public class SimpleForms extends JavaPlugin {
                 }
             }
 
-            player.sendMessage("§aYou transformed into a " + form + "!");
+            player.sendMessage("§aTransformed into §e" + form + "!");
             return true;
         }
 
         if (command.getName().equalsIgnoreCase("untransform")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                    "undisguise " + player.getName());
-
+            player.performCommand("undisguise");
             player.setAllowFlight(false);
             player.setFlying(false);
-
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
-
             player.sendMessage("§7You returned to human form.");
             return true;
         }
