@@ -1,5 +1,8 @@
 package me.simpleforms;
 
+import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -52,13 +55,17 @@ public class SimpleForms extends JavaPlugin {
                 return true;
             }
 
-            // Clear previous effects
+            // Remove any previous disguise
+            DisguiseAPI.undisguiseToAll(player);
+
+            // Clear potion effects
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
 
             switch (form) {
                 case "bat" -> {
+                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.BAT));
                     player.setAllowFlight(true);
                     player.setFlying(true);
 
@@ -76,6 +83,7 @@ public class SimpleForms extends JavaPlugin {
                 }
 
                 case "frog" -> {
+                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.FROG));
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.JUMP_BOOST,
                             Integer.MAX_VALUE,
@@ -85,6 +93,7 @@ public class SimpleForms extends JavaPlugin {
                 }
 
                 case "cat" -> {
+                    DisguiseAPI.disguiseToAll(player, new MobDisguise(DisguiseType.CAT));
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.SPEED,
                             Integer.MAX_VALUE,
@@ -97,6 +106,7 @@ public class SimpleForms extends JavaPlugin {
         }
 
         if (command.getName().equalsIgnoreCase("untransform")) {
+            DisguiseAPI.undisguiseToAll(player);
             player.setAllowFlight(false);
             player.setFlying(false);
             player.getActivePotionEffects().forEach(effect ->
