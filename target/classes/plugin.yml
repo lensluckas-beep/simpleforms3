@@ -1,0 +1,15 @@
+name: SimpleForms
+version: 1.0
+main: me.simpleforms.SimpleForms
+api-version: 1.20
+
+commands:
+  setform:
+    description: Set your form
+    usage: /setform <bat|frog|cat>
+
+  transform:
+    description: Transform into your selected form
+
+  untransform:
+    description: Return to normal form

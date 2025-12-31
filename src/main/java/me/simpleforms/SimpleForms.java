@@ -52,7 +52,7 @@ public class SimpleForms extends JavaPlugin {
                 return true;
             }
 
-            // Clear effects
+            // Clear previous effects
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
@@ -62,13 +62,11 @@ public class SimpleForms extends JavaPlugin {
                     player.setAllowFlight(true);
                     player.setFlying(true);
 
-                    // Drain health slowly while flying
                     Bukkit.getScheduler().runTaskTimer(this, task -> {
                         if (!player.isOnline() || !player.isFlying()) {
                             task.cancel();
                             return;
                         }
-
                         if (player.getHealth() > 1.0) {
                             player.damage(1.0);
                         }
@@ -79,7 +77,7 @@ public class SimpleForms extends JavaPlugin {
 
                 case "frog" -> {
                     player.addPotionEffect(new PotionEffect(
-                            PotionEffectType.JUMP,
+                            PotionEffectType.JUMP_BOOST,
                             Integer.MAX_VALUE,
                             2
                     ));
