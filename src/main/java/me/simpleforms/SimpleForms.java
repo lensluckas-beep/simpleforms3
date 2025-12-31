@@ -53,48 +53,76 @@ public class SimpleForms extends JavaPlugin {
                 return true;
             }
 
-            // Remove old effects
+            // Clear old potion effects
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
 
+            // Make sure flight is off unless bat
+            player.setAllowFlight(false);
+            player.setFlying(false);
+
             switch (form) {
                 case "bat" -> {
-                    player.performCommand("disguise " + player.getName() + " bat");
+                    // LibsDisguises: player runs it, so NO player name
+                    player.performCommand("disguise bat");
+
                     player.setAllowFlight(true);
                     player.setFlying(true);
+
+                    // Drain health slowly while flying
+                    Bukkit.getScheduler().runTaskTimer(this, task -> {
+                        if (!player.isOnline() || !player.isFlying()) {
+                            task.cancel();
+                            return;
+                        }
+                        if (player.getHealth() > 1.0) {
+                            player.damage(1.0); // half-heart
+                        }
+                    }, 40L, 40L);
+
+                    player.sendMessage("§dTransformed into bat!");
                 }
 
                 case "frog" -> {
-                    player.performCommand("disguise " + player.getName() + " frog");
+                    player.performCommand("disguise frog");
+
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.JUMP_BOOST,
                             Integer.MAX_VALUE,
                             2
                     ));
+
+                    player.sendMessage("§aTransformed into frog!");
                 }
 
                 case "cat" -> {
-                    player.performCommand("disguise " + player.getName() + " cat");
+                    player.performCommand("disguise cat");
+
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.SPEED,
                             Integer.MAX_VALUE,
                             1
                     ));
+
+                    player.sendMessage("§6Transformed into cat!");
                 }
             }
 
-            player.sendMessage("§aTransformed into §e" + form + "!");
             return true;
         }
 
         if (command.getName().equalsIgnoreCase("untransform")) {
+            // Undo LibsDisguises disguise (player can run it)
             player.performCommand("undisguise");
+
             player.setAllowFlight(false);
             player.setFlying(false);
+
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType())
             );
+
             player.sendMessage("§7You returned to human form.");
             return true;
         }
